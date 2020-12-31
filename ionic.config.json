@@ -1,0 +1,7 @@
+{
+  "name": "wafiqkicks",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
