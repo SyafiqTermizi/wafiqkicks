@@ -1,5 +1,6 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import dayjs from "dayjs";
 import {
   IonContent,
   IonHeader,
@@ -7,6 +8,7 @@ import {
   IonTitle,
   IonToolbar,
   IonButton,
+  IonText,
 } from "@ionic/react";
 
 import axios from "../axiosConfig";
@@ -14,14 +16,28 @@ import "./Tab1.css";
 
 const Tab1: React.FC = () => {
   const [disableButton, setDisableButton] = useState(false);
+  const [dailySummary, setDailySummary] = useState({
+    kicks: 0,
+    first: 0,
+    last: 0,
+  });
+
+  const fetchDailySummary = () => {
+    axios.get("/kicks/daily-summary/").then((res) => setDailySummary(res.data));
+  };
+
+  useEffect(() => {
+    fetchDailySummary();
+  }, []);
 
   const submit = () => {
     setDisableButton(true);
-    axios.post("/kicks/count-up/").then((res) =>
+    axios.post("/kicks/count-up/").then((_) => {
+      fetchDailySummary();
       setTimeout(() => {
         setDisableButton(false);
-      }, 59999)
-    );
+      }, 59999);
+    });
   };
 
   return (
@@ -45,6 +61,24 @@ const Tab1: React.FC = () => {
           >
             Kick!
           </IonButton>
+          <IonText>
+            <p>
+              <strong>Kicks:&nbsp;</strong>
+              {dailySummary.kicks}
+            </p>
+          </IonText>
+          <IonText>
+            <p>
+              <strong>First:&nbsp;</strong>
+              {dayjs(dailySummary.first).format("h:mm A")}
+            </p>
+          </IonText>
+          <IonText>
+            <p>
+              <strong>Latest:&nbsp;</strong>
+              {dayjs(dailySummary.last).format("h:mm A")}
+            </p>
+          </IonText>
         </div>
       </IonContent>
     </IonPage>
