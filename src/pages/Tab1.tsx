@@ -1,15 +1,29 @@
 import React from "react";
+import { useState } from "react";
 import {
   IonContent,
   IonHeader,
   IonPage,
   IonTitle,
   IonToolbar,
+  IonButton,
 } from "@ionic/react";
-import ExploreContainer from "../components/ExploreContainer";
+
+import axios from "../axiosConfig";
 import "./Tab1.css";
 
 const Tab1: React.FC = () => {
+  const [disableButton, setDisableButton] = useState(false);
+
+  const submit = () => {
+    setDisableButton(true);
+    axios.post("/kicks/count-up/").then((res) =>
+      setTimeout(() => {
+        setDisableButton(false);
+      }, 59999)
+    );
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -23,7 +37,15 @@ const Tab1: React.FC = () => {
             <IonTitle size="large">Tab 1</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer name="Tab 1 page" />
+        <div className="container">
+          <IonButton
+            color="primary"
+            onClick={() => submit()}
+            disabled={disableButton}
+          >
+            Kick!
+          </IonButton>
+        </div>
       </IonContent>
     </IonPage>
   );
