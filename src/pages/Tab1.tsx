@@ -23,7 +23,10 @@ const Tab1: React.FC = () => {
   });
 
   const fetchDailySummary = () => {
-    axios.get("/kicks/daily-summary/").then((res) => setDailySummary(res.data));
+    axios
+      .get("/kicks/daily-summary/")
+      .then((res) => setDailySummary(res.data))
+      .catch((err) => err);
   };
 
   useEffect(() => {
@@ -32,12 +35,15 @@ const Tab1: React.FC = () => {
 
   const submit = () => {
     setDisableButton(true);
-    axios.post("/kicks/count-up/").then((_) => {
-      fetchDailySummary();
-      setTimeout(() => {
-        setDisableButton(false);
-      }, 59999);
-    });
+    axios
+      .post("/kicks/count-up/")
+      .then((_) => {
+        fetchDailySummary();
+        setTimeout(() => {
+          setDisableButton(false);
+        }, 59999);
+      })
+      .catch((err) => err);
   };
 
   return (
@@ -61,24 +67,28 @@ const Tab1: React.FC = () => {
           >
             Kick!
           </IonButton>
-          <IonText>
-            <p>
-              <strong>Kicks:&nbsp;</strong>
-              {dailySummary.kicks}
-            </p>
-          </IonText>
-          <IonText>
-            <p>
-              <strong>First:&nbsp;</strong>
-              {dayjs(dailySummary.first).format("h:mm A")}
-            </p>
-          </IonText>
-          <IonText>
-            <p>
-              <strong>Latest:&nbsp;</strong>
-              {dayjs(dailySummary.last).format("h:mm A")}
-            </p>
-          </IonText>
+          {Boolean(dailySummary.kicks) && (
+            <>
+              <IonText>
+                <p>
+                  <strong>Kicks:&nbsp;</strong>
+                  {dailySummary.kicks}
+                </p>
+              </IonText>
+              <IonText>
+                <p>
+                  <strong>First:&nbsp;</strong>
+                  {dayjs(dailySummary.first).format("h:mm A")}
+                </p>
+              </IonText>
+              <IonText>
+                <p>
+                  <strong>Latest:&nbsp;</strong>
+                  {dayjs(dailySummary.last).format("h:mm A")}
+                </p>
+              </IonText>
+            </>
+          )}
         </div>
       </IonContent>
     </IonPage>
