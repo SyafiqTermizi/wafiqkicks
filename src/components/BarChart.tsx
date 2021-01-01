@@ -26,7 +26,6 @@ export const BarChart: React.FC<Props> = ({ data, maxCount }) => {
       },
     ],
   };
-  console.log(data);
 
   return <CanvasJSChart options={options} />;
 };
